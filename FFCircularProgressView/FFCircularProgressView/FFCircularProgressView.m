@@ -215,23 +215,27 @@
 }
 
 - (void) drawStop {
-    CGFloat radius = (self.bounds.size.width)/2;
-    CGFloat ratio = kStopSizeRatio;
-    CGFloat sideSize = self.bounds.size.width * ratio;
-    
-    UIBezierPath *stopPath = [UIBezierPath bezierPath];
-    [stopPath moveToPoint:CGPointMake(0, 0)];
-    [stopPath addLineToPoint:CGPointMake(sideSize, 0.0)];
-    [stopPath addLineToPoint:CGPointMake(sideSize, sideSize)];
-    [stopPath addLineToPoint:CGPointMake(0.0, sideSize)];
-    [stopPath closePath];
-    
-    // ...and move it into the right place.
-    [stopPath applyTransform:CGAffineTransformMakeTranslation(radius * (1-ratio), radius* (1-ratio))];
-    
-    [_iconLayer setPath:stopPath.CGPath];
-    [_iconLayer setStrokeColor:_progressLayer.strokeColor];
-    [_iconLayer setFillColor:self.tintColor.CGColor];
+    if (_hideStopIcon) {
+        [_iconLayer setPath:nil];
+    } else {
+        CGFloat radius = (self.bounds.size.width)/2;
+        CGFloat ratio = kStopSizeRatio;
+        CGFloat sideSize = self.bounds.size.width * ratio;
+
+        UIBezierPath *stopPath = [UIBezierPath bezierPath];
+        [stopPath moveToPoint:CGPointMake(0, 0)];
+        [stopPath addLineToPoint:CGPointMake(sideSize, 0.0)];
+        [stopPath addLineToPoint:CGPointMake(sideSize, sideSize)];
+        [stopPath addLineToPoint:CGPointMake(0.0, sideSize)];
+        [stopPath closePath];
+
+        // ...and move it into the right place.
+        [stopPath applyTransform:CGAffineTransformMakeTranslation(radius * (1-ratio), radius* (1-ratio))];
+
+        [_iconLayer setPath:stopPath.CGPath];
+        [_iconLayer setStrokeColor:_progressLayer.strokeColor];
+        [_iconLayer setFillColor:self.tintColor.CGColor];
+    }
 }
 
 - (void) drawArrow {

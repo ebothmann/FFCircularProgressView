@@ -48,6 +48,11 @@
 @property (readwrite) BOOL hideProgressIcons;
 
 /**
+ * You can hide the stop icon if the progress cannot be stopped by the user
+ */
+@property (readwrite) BOOL hideStopIcon;
+
+/**
  * Make the background layer to spin around its center. This should be called in the main thread.
  */
 - (void) startSpinProgressBackgroundLayer;
