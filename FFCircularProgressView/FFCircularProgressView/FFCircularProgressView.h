@@ -23,11 +23,6 @@
 @property (nonatomic, assign) CGFloat lineWidth;
 
 /**
- * The color of the progress view
- */
-@property (nonatomic, strong) UIColor *tintColor;
-
-/**
  * The color of the tick view
  */
 @property (nonatomic, strong) UIColor *tickColor;

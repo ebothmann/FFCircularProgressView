@@ -56,12 +56,11 @@
     self.backgroundColor = [UIColor clearColor];
     
     _lineWidth = fmaxf(self.frame.size.width * 0.025, 1.f);
-    _tintColor = [UIColor ios7Blue];
     _tickColor = [UIColor whiteColor];
     
     self.progressBackgroundLayer = [CAShapeLayer layer];
     _progressBackgroundLayer.contentsScale = [[UIScreen mainScreen] scale];
-    _progressBackgroundLayer.strokeColor = _tintColor.CGColor;
+    _progressBackgroundLayer.strokeColor = self.tintColor.CGColor;
     _progressBackgroundLayer.fillColor = self.backgroundColor.CGColor;
     _progressBackgroundLayer.lineCap = kCALineCapRound;
     _progressBackgroundLayer.lineWidth = _lineWidth;
@@ -69,7 +68,7 @@
     
     self.progressLayer = [CAShapeLayer layer];
     _progressLayer.contentsScale = [[UIScreen mainScreen] scale];
-    _progressLayer.strokeColor = _tintColor.CGColor;
+    _progressLayer.strokeColor = self.tintColor.CGColor;
     _progressLayer.fillColor = nil;
     _progressLayer.lineCap = kCALineCapSquare;
     _progressLayer.lineWidth = _lineWidth * 2.0;
@@ -77,7 +76,7 @@
     
     self.iconLayer = [CAShapeLayer layer];
     _iconLayer.contentsScale = [[UIScreen mainScreen] scale];
-    _iconLayer.strokeColor = _tintColor.CGColor;
+    _iconLayer.strokeColor = self.tintColor.CGColor;
     _iconLayer.fillColor = nil;
     _iconLayer.lineCap = kCALineCapButt;
     _iconLayer.lineWidth = _lineWidth;
@@ -87,10 +86,15 @@
 
 - (void)setTintColor:(UIColor *)tintColor
 {
-    _tintColor = tintColor;
+    [super setTintColor:tintColor];
     _progressBackgroundLayer.strokeColor = tintColor.CGColor;
     _progressLayer.strokeColor = tintColor.CGColor;
     _iconLayer.strokeColor = tintColor.CGColor;
+}
+
+- (void)tintColorDidChange
+{
+    [self setNeedsDisplay];
 }
 
 - (void)setTickColor:(UIColor *)tickColor
