@@ -27,7 +27,7 @@
 {
     self = [super initWithFrame:frame];
     if (self) {
-        [self setup];        
+        [self setup];
     }
     return self;
 }
@@ -46,18 +46,18 @@
     {
         [_iconView removeFromSuperview];
     }
-    
+
     _iconView = iconView;
     [self addSubview:_iconView];
 }
 
 - (void)setup {
-    
+
     self.backgroundColor = [UIColor clearColor];
-    
+
     _lineWidth = fmaxf(self.frame.size.width * 0.025, 1.f);
     _tickColor = [UIColor whiteColor];
-    
+
     self.progressBackgroundLayer = [CAShapeLayer layer];
     _progressBackgroundLayer.contentsScale = [[UIScreen mainScreen] scale];
     _progressBackgroundLayer.strokeColor = self.tintColor.CGColor;
@@ -65,7 +65,7 @@
     _progressBackgroundLayer.lineCap = kCALineCapRound;
     _progressBackgroundLayer.lineWidth = _lineWidth;
     [self.layer addSublayer:_progressBackgroundLayer];
-    
+
     self.progressLayer = [CAShapeLayer layer];
     _progressLayer.contentsScale = [[UIScreen mainScreen] scale];
     _progressLayer.strokeColor = self.tintColor.CGColor;
@@ -73,7 +73,7 @@
     _progressLayer.lineCap = kCALineCapSquare;
     _progressLayer.lineWidth = _lineWidth * 2.0;
     [self.layer addSublayer:_progressLayer];
-    
+
     self.iconLayer = [CAShapeLayer layer];
     _iconLayer.contentsScale = [[UIScreen mainScreen] scale];
     _iconLayer.strokeColor = self.tintColor.CGColor;
@@ -84,16 +84,12 @@
     [self.layer addSublayer:_iconLayer];
 }
 
-- (void)setTintColor:(UIColor *)tintColor
-{
-    [super setTintColor:tintColor];
-    _progressBackgroundLayer.strokeColor = tintColor.CGColor;
-    _progressLayer.strokeColor = tintColor.CGColor;
-    _iconLayer.strokeColor = tintColor.CGColor;
-}
-
 - (void)tintColorDidChange
 {
+    [super tintColorDidChange];
+    _progressBackgroundLayer.strokeColor = self.tintColor.CGColor;
+    _progressLayer.strokeColor = self.tintColor.CGColor;
+    _iconLayer.strokeColor = self.tintColor.CGColor;
     [self setNeedsDisplay];
 }
 
@@ -116,7 +112,7 @@
 
     // Draw progress
     CGFloat startAngle = - ((float)M_PI / 2); // 90 degrees
-    // CGFloat endAngle = (2 * (float)M_PI) + startAngle;
+                                              // CGFloat endAngle = (2 * (float)M_PI) + startAngle;
     CGFloat endAngle = (self.progress * 2 * (float)M_PI) + startAngle;
     UIBezierPath *processPath = [UIBezierPath bezierPath];
     processPath.lineCapStyle = kCGLineCapButt;
@@ -124,16 +120,16 @@
 
     CGFloat radius = (self.bounds.size.width - _lineWidth*3) / 2.0;
     [processPath addArcWithCenter:center radius:radius startAngle:startAngle endAngle:endAngle clockwise:YES];
-    
+
     [_progressLayer setPath:processPath.CGPath];
-    
+
     if ([self progress] == 1.0) {
         [self drawTick];
     } else if (([self progress] > 0) && [self progress] < 1.0) {
-        
+
         if (!_hideProgressIcons)
             [self drawStop];
-        
+
     } else {
         if (!self.iconView && !self.iconPath)
         {
@@ -153,7 +149,7 @@
 
 - (void)setLineWidth:(CGFloat)lineWidth {
     _lineWidth = fmaxf(lineWidth, 1.f);
-    
+
     _progressBackgroundLayer.lineWidth = _lineWidth;
     _progressLayer.lineWidth = _lineWidth * 2.0;
     _iconLayer.lineWidth = _lineWidth;
@@ -167,12 +163,12 @@
     CGFloat endAngle = (2 * (float)M_PI) + startAngle;
     CGPoint center = CGPointMake(self.bounds.size.width/2, self.bounds.size.height/2);
     CGFloat radius = (self.bounds.size.width - _lineWidth)/2;
-    
+
     // Draw background
     UIBezierPath *processBackgroundPath = [UIBezierPath bezierPath];
     processBackgroundPath.lineWidth = _lineWidth;
     processBackgroundPath.lineCapStyle = kCGLineCapRound;
-    
+
     // Recompute the end angle to make it at 90% of the progress
     if (partial) {
         endAngle = (1.8F * (float)M_PI) + startAngle;
@@ -185,16 +181,16 @@
 
 - (void) drawTick {
     CGFloat radius = MIN(self.frame.size.width, self.frame.size.height)/2;
-    
+
     /*
      First draw a tick that looks like this:
-     
+
      A---F
      |   |
      |   E-------D
      |           |
      B-----------C
-     
+
      (Remember: (0,0) is top left)
      */
     UIBezierPath *tickPath = [UIBezierPath bezierPath];
@@ -206,13 +202,13 @@
     [tickPath addLineToPoint:CGPointMake(tickWidth, tickWidth)];         // E
     [tickPath addLineToPoint:CGPointMake(tickWidth, 0)];                 // F
     [tickPath closePath];
-    
+
     // Now rotate it through -45 degrees...
     [tickPath applyTransform:CGAffineTransformMakeRotation(-M_PI_4)];
-    
+
     // ...and move it into the right place.
     [tickPath applyTransform:CGAffineTransformMakeTranslation(radius * .46, 1.02 * radius)];
-    
+
     [_iconLayer setPath:tickPath.CGPath];
     [_iconLayer setFillColor:self.tickColor.CGColor];
     [_progressBackgroundLayer setFillColor:_progressLayer.strokeColor];
@@ -248,7 +244,7 @@
     CGFloat segmentSize = self.bounds.size.width * ratio;
 
     // Draw icon
-    
+
     UIBezierPath *path = [UIBezierPath bezierPath];
     [path moveToPoint:CGPointMake(0.0, 0.0)];
     [path addLineToPoint:CGPointMake(segmentSize * 2.0, 0.0)];
@@ -270,18 +266,18 @@
 
 - (void)setProgress:(CGFloat)progress {
     if (progress > 1.0) progress = 1.0;
-    
+
     if (_progress != progress) {
         _progress = progress;
-        
+
         if (_progress == 1.0) {
             [self animateProgressBackgroundLayerFillColor];
         }
-        
+
         if (_progress == 0.0) {
             _progressBackgroundLayer.fillColor = self.backgroundColor.CGColor;
         }
-        
+
         [self setNeedsDisplay];
     }
 }
@@ -290,23 +286,23 @@
 
 - (void) animateProgressBackgroundLayerFillColor {
     CABasicAnimation *colorAnimation = [CABasicAnimation animationWithKeyPath:@"fillColor"];
-    
+
     colorAnimation.duration = .5;
     colorAnimation.repeatCount = 1.0;
     colorAnimation.removedOnCompletion = NO;
-    
+
     colorAnimation.fromValue = (__bridge id) _progressBackgroundLayer.backgroundColor;
     colorAnimation.toValue = (__bridge id) _progressLayer.strokeColor;
-    
+
     colorAnimation.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseIn];
-    
+
     [_progressBackgroundLayer addAnimation:colorAnimation forKey:@"colorAnimation"];
 }
 
 - (void) startSpinProgressBackgroundLayer {
     self.isSpinning = YES;
     [self drawBackgroundCircle:YES];
-    
+
     CABasicAnimation *rotationAnimation = [CABasicAnimation animationWithKeyPath:@"transform.rotation.z"];
     rotationAnimation.toValue = [NSNumber numberWithFloat: M_PI * 2.0];
     rotationAnimation.duration = 1;
